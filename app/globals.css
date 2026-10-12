@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #F8F7F4;
+  --text: #1A1A1A;
+  --text-secondary: #4A4A4A;
+  --accent: #1E3A5F;
+  --accent-soft: #2C5F7C;
+  --border: #E5E2DC;
+  --card: #FFFFFF;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --font-sans: var(--font-inter);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.prose-portfolio {
+  font-size: 1.075rem;
+  color: var(--text);
+}
+
+.prose-portfolio p {
+  margin-bottom: 1.4rem;
+}
+
+.prose-portfolio h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.prose-portfolio h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1.8rem;
+  margin-bottom: 0.7rem;
+}
+
+.prose-portfolio ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin-bottom: 1.4rem;
+}
+
+.prose-portfolio li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-portfolio a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

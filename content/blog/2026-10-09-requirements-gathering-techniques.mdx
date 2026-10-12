@@ -1,0 +1,53 @@
+---
+title: "Requirements Gathering Techniques That Actually Prevent Rework"
+description: "Practical requirements gathering techniques a technical project manager can use to cut rework and keep delivery on track from the very first sprint."
+date: "2026-10-09"
+category: "Requirements & Scope Management"
+tags: ["requirements", "scope", "discovery"]
+focusKeyword: "requirements gathering techniques"
+secondaryKeywords: ["scope management", "acceptance criteria", "stakeholder interviews"]
+---
+
+Good requirements gathering techniques are the cheapest form of risk management available to a project manager. I learned this the hard way early in my career: a build that took three weeks to ship took another two to fix, simply because nobody had agreed on what "done" actually meant. Rework is rarely caused by bad developers. It is almost always caused by unclear requirements that were assumed to be understood.
+
+Here are the techniques I rely on now, and why they hold up across web, mobile, and SaaS work.
+
+## Start with the outcome, not the feature list
+
+Clients rarely open with "we need a reporting module." They open with a business problem. My first job is to translate that problem into an outcome we can measure. If the outcome is "reduce manual invoice reconciliation," then the feature list becomes a means, not the goal.
+
+I write the outcome in one sentence and share it back. If the client disagrees, we have saved weeks. If they agree, everything after that has an anchor.
+
+## Interview one stakeholder at a time
+
+Group sessions are good for alignment, but they are terrible for detail. People defer to the loudest voice in the room. I schedule short one-on-one conversations with each key stakeholder and ask the same questions. The gaps between their answers are where the real requirements live.
+
+## Use concrete scenarios instead of abstract statements
+
+"Users should be able to manage their subscription" is not a requirement. It is a wish. I rewrite it as a scenario: a customer upgrades mid-cycle, the proration is calculated, an invoice is generated, and the change is reflected within one billing period.
+
+Scenarios expose edge cases that feature lists hide.
+
+## Write acceptance criteria before development starts
+
+Every meaningful item gets acceptance criteria in plain language. This is where "requirements gathering techniques" stop being an interview skill and become a delivery discipline. If I cannot write what "done" looks like, the team cannot build it with confidence.
+
+## Review requirements with the people who build them
+
+I never finalize requirements without a working session with the engineers and QA lead. They see the failure modes I miss. A thirty-minute review at the start routinely saves a week of rework later.
+
+## Keep a decision log
+
+Requirements change. What matters is knowing why. I keep a short decision log: what changed, who asked, and what trade-off we accepted. Months later, this log ends arguments before they start.
+
+## Key takeaway
+
+Requirements gathering is not a phase you complete once. It is a habit of turning vague intent into something a team can build and verify. Get that right early, and the rest of the project becomes a matter of execution rather than rescue.
+
+**A quick checklist before you start building:**
+- The business outcome is written in one sentence
+- Key stakeholders were interviewed individually
+- Requirements are written as scenarios, not features
+- Acceptance criteria exist for every significant item
+- Engineers and QA have reviewed the requirements
+- A decision log is being kept
