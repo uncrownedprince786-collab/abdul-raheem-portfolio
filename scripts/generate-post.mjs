@@ -6,6 +6,7 @@ import matter from "gray-matter";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const POSTS_DIR = path.join(ROOT, "content", "blog");
+const BANK_DIR = path.join(__dirname, "content-bank");
 const TOPICS = JSON.parse(
   fs.readFileSync(path.join(__dirname, "topics.json"), "utf8"),
 ).topics;
@@ -45,6 +46,67 @@ function readExisting() {
         date: String(data.date || ""),
       };
     });
+}
+
+function readBank() {
+  if (!fs.existsSync(BANK_DIR)) return [];
+  return fs
+    .readdirSync(BANK_DIR)
+    .filter((f) => f.endsWith(".mdx") || f.endsWith(".md"))
+    .map((file) => {
+      const raw = fs.readFileSync(path.join(BANK_DIR, file), "utf8");
+      const { data, content } = matter(raw);
+      return {
+        slug: file.replace(/\.mdx?$/, ""),
+        title: String(data.title || ""),
+        description: String(data.description || ""),
+        category: String(data.category || ""),
+        tags: Array.isArray(data.tags) ? data.tags : [],
+        focusKeyword: String(data.focusKeyword || ""),
+        secondaryKeywords: Array.isArray(data.secondaryKeywords)
+          ? data.secondaryKeywords
+          : [],
+        body: content,
+      };
+    });
+}
+
+function pickFromBank(existing) {
+  const bank = readBank();
+  if (bank.length === 0) return null;
+
+  const last3Categories = new Set(
+    existing
+      .filter((p) => daysAgo(p.date) <= 3)
+      .map((p) => String(p.category || "").toLowerCase()),
+  );
+  const usedKeywords = new Set(
+    existing
+      .filter((p) => daysAgo(p.date) <= LOOKBACK_DAYS)
+      .map((p) => String(p.focusKeyword || "").toLowerCase()),
+  );
+  const usedTitles = new Set(
+    existing.map((p) => String(p.title || "").toLowerCase()),
+  );
+
+  const date = new Date().toISOString().slice(0, 10);
+
+  for (const entry of bank) {
+    const keyword = String(entry.focusKeyword || "").toLowerCase();
+    const category = String(entry.category || "").toLowerCase();
+    const target = path.join(
+      POSTS_DIR,
+      `${date}-${slugify(entry.slug)}.mdx`,
+    );
+
+    if (usedKeywords.has(keyword)) continue;
+    if (last3Categories.has(category)) continue;
+    if (usedTitles.has(String(entry.title).toLowerCase())) continue;
+    if (fs.existsSync(target)) continue;
+
+    return entry;
+  }
+  return null;
 }
 
 function daysAgo(dateStr) {
@@ -222,12 +284,31 @@ function writePost(article) {
 
 async function main() {
   const existing = readExisting();
+
+  console.log(`Existing posts: ${existing.length}`);
+
+  // 1) Publish from the content bank first (works without any API key).
+  const bankEntry = pickFromBank(existing);
+  if (bankEntry) {
+    const file = writePost(bankEntry);
+    console.log(`Published from content bank: ${bankEntry.title}`);
+    console.log(`File: ${path.relative(ROOT, file)}`);
+    return;
+  }
+
+  // 2) Fall back to AI generation when a key is configured.
+  if (!API_KEY) {
+    throw new Error(
+      "No unused content-bank posts left and OPENAI_API_KEY is not set. " +
+        "Add posts to scripts/content-bank/ or configure OPENAI_API_KEY.",
+    );
+  }
+
   const topic = pickTopic(existing);
   const keyword = pickKeyword(existing);
 
   console.log(`Topic: ${topic}`);
   console.log(`Focus keyword: ${keyword}`);
-  console.log(`Existing posts: ${existing.length}`);
 
   const prompt = buildPrompt({ topic, keyword, existing });
 
